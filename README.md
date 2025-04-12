@@ -1,72 +1,72 @@
-# 复制图文 (Copy Image Text)
+# Copy Image Text
 
-复制图文 (Copy Image Text) 是一个 Obsidian 插件,允许用户将笔记内容(包括文本和图片)复制到剪贴板,同时保持格式。
+Copy Image Text is an Obsidian plugin that allows users to copy note content (including text and images) to the clipboard while preserving formatting.
 
-## 功能
+## Features
 
-- 支持两种复制模式：
-  - 复制文本和图片(富文本格式)：适合复制到 Word、微信公众号等富文本编辑器
-  - 复制为 Markdown 格式：适合复制到其他 Markdown 编辑器
-- 自动将 Obsidian 图片转换为内联 base64 格式(富文本模式)或标准 Markdown 图片链接(Markdown 模式)
-- 保持 Markdown 格式,包括标题、粗体、斜体、代码块等
-- 特别优化了在微信公众号编辑器中的显示
+- Supports two copy modes:
+  - Copy text and images (rich text format): Ideal for pasting into rich text editors such as Microsoft Word or WeChat public account editors.
+  - Copy as Markdown format: Ideal for pasting into other Markdown editors.
+- Automatically converts Obsidian image embeds into inline base64 images (rich text mode) or standard Markdown image links (Markdown mode).
+- Retains Markdown formatting including headings, bold, italics, code blocks, etc.
+- Specially optimized for display in WeChat public account editors.
 
-## 安装
+## Installation
 
-1. 打开 Obsidian 设置
-2. 进入"第三方插件"设置页面
-3. 确保"安全模式"已关闭
-4. 点击"浏览社区插件"
-5. 搜索"复制图文"
-6. 点击"安装"
-7. 安装完成后,启用该插件
+1. Open Obsidian Settings.
+2. Go to the "Third-party plugins" settings page.
+3. Ensure that "Safe mode" is turned off.
+4. Click on "Browse community plugins."
+5. Search for "Copy Image Text."
+6. Click "Install."
+7. Once installation is complete, enable the plugin.
 
-## 使用方法
+## Usage
 
-1. 在 Obsidian 中打开一个笔记
-2. 选择要复制的文本(如果没有选择,将复制整个文档)
-3. 使用命令面板执行以下命令之一：
-   - "复制文本和图片(富文本)"：复制为富文本格式
-   - "复制为 Markdown 格式"：复制为标准 Markdown 格式
-4. 在目标应用程序中粘贴内容
+1. Open a note in Obsidian.
+2. Select the text you want to copy (if no text is selected, the entire document will be copied).
+3. Execute one of the following commands from the command palette:
+   - **Copy Text and Images (Rich Text)**: Copies as rich text format.
+   - **Copy as Markdown Format**: Copies as standard Markdown format.
+4. Paste the copied content into your target application.
 
-提示：你可以在 Obsidian 设置的"快捷键"中为这两个命令设置快捷键，使用起来会更方便。
+*Tip: You can assign hotkeys for these commands in Obsidian Settings under "Hotkeys" for more convenient use.*
 
-## 开发说明
+## Development Notes
 
-本插件使用 TypeScript 开发。如果您想贡献代码：
+This plugin is developed using TypeScript. To contribute:
 
-1. 克隆仓库后，运行 `npm install` 安装依赖。
-2. 修改 TypeScript 源代码后，运行 `npm run build` 来编译。
-3. 编译后的 `main.js` 文件不包含在版本控制中，但需要手动包含在发行版中。
+1. After cloning the repository, run `npm install` to install dependencies.
+2. After modifying the TypeScript source code, run `npm run build` to compile.
+3. The compiled `main.js` file is not tracked in version control but must be manually included in releases.
 
-注意：发布新版本时，请确保先运行 `npm run build`，然后将生成的 `main.js` 文件添加到发行包中。
+*Note: Before publishing a new version, run `npm run build` and then add the generated `main.js` file to the release package.*
 
-## 注意事项
+## Notes
 
-- 图片大小限制为 10MB,超过此大小的图片将不会被复制
-- 某些特殊格式可能在某些目标应用程序中无法完全保留
-- 请确保您有权复制和分享笔记中包含的图片
-- 使用 Markdown 格式复制时的小贴士：
-  - 如果你想把文档发布到 GitHub 或博客等平台，建议按以下步骤操作：
-    1. 使用支持图床上传的编辑器（比如 Typora + PicList）
-    2. 先将文档中的图片上传到图床（在 Typora 中已测试可用）
-    3. 这样图片就变成了在线链接
-    4. 然后直接复制整篇文档即可，因为此时文档中的图片都是在线链接了
-  - Obsidian 可能也有类似的图床上传插件可以实现此功能（未经测试）
+- Images are limited to a maximum of 10MB. Images exceeding this size will not be copied.
+- Some special formatting may not be fully preserved in certain target applications.
+- Ensure you have the right to copy and share images contained in your notes.
+- **Markdown Format Copy Tips:**
+  - If you plan to publish your document on GitHub or a blog platform, consider the following:
+    1. Use an editor that supports image bed uploads (e.g., Typora with PicList).
+    2. Upload the images in your document to an image bed (this has been tested in Typora).
+    3. The images will then convert to online links.
+    4. You can then copy the entire document, and all images will be online links.
+  - Obsidian may also have plugins available for image bed uploads (untested).
 
-## 反馈和支持
+## Feedback and Support
 
-如果您遇到任何问题或有改进建议,请在 GitHub 仓库中提出 issue。
+If you encounter any issues or have suggestions for improvement, please raise an issue in the GitHub repository.
 
-## 许可证
+## License
 
-本插件采用 MIT 许可证。详情请参阅 [LICENSE](LICENSE) 文件。
+This plugin is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## 作者
+## Author
 
-由 msgk 开发和维护。
+Developed and maintained by msgk.
 
-## 版本
+## Version
 
-当前版本: 1.0.7
+Current version: 1.0.7

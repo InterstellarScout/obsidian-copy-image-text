@@ -4,13 +4,13 @@ export default class CopyImageTextPlugin extends Plugin {
   async onload() {
     this.addCommand({
       id: 'copy-text',
-      name: '复制文本和图片(富文本)',
+      name: 'Copy Text and Images (Rich Text)',
       editorCallback: (editor: Editor, view: MarkdownView) => this.copyTextAndImages(editor, view)
     });
 
     this.addCommand({
       id: 'copy-markdown',
-      name: '复制为Markdown格式',
+      name: 'Copy as Markdown Format',
       editorCallback: (editor: Editor, view: MarkdownView) => this.copyAsMarkdown(editor, view)
     });
   }
@@ -20,22 +20,22 @@ export default class CopyImageTextPlugin extends Plugin {
       let content = editor.getSelection() || editor.getValue();
 
       if (!view.file) {
-        new Notice('无法获取当前文件信息，复制可能不完整');
+        new Notice('Unable to retrieve current file information, copying may be incomplete');
         return;
       }
 
       const htmlContent = await this.convertToHtml(content, view.file);
-      
+
       await navigator.clipboard.write([
         new ClipboardItem({
           'text/html': new Blob([htmlContent], { type: 'text/html' }),
           'text/plain': new Blob([content], { type: 'text/plain' })
         })
       ]);
-      
-      new Notice('内容已成功复制');
+
+      new Notice('Content copied successfully');
     } catch (error) {
-      new Notice('复制失败，请稍后重试');
+      new Notice('Copy failed, please try again later');
     }
   }
 
@@ -44,26 +44,26 @@ export default class CopyImageTextPlugin extends Plugin {
       let content = editor.getSelection() || editor.getValue();
 
       if (!view.file) {
-        new Notice('无法获取当前文件信息复制可能不完整');
+        new Notice('Unable to retrieve current file information, copying may be incomplete');
         return;
       }
 
       content = await this.replaceImageLinks(content, view.file);
 
       await navigator.clipboard.writeText(content);
-      new Notice('Markdown格式已复制');
+      new Notice('Markdown format copied');
     } catch (error) {
-      new Notice('复制失败，请稍后重试');
+      new Notice('Copy failed, please try again later');
     }
   }
 
   async replaceImageLinks(content: string, file: TFile): Promise<string> {
     const imageRegex = /!\[\[(.*?)\]\]/g;
     let result = content;
-    
+
     for (const match of content.matchAll(imageRegex)) {
       const imagePath = match[1];
-      const imageFile = this.app.vault.getFiles().find(f => 
+      const imageFile = this.app.vault.getFiles().find(f =>
         f.name.toLowerCase().includes(imagePath.split('/').pop()?.toLowerCase() || '')
       );
 
@@ -72,18 +72,18 @@ export default class CopyImageTextPlugin extends Plugin {
           .replace(/^app:\/\/.*?\//, '')
           .replace(/\?.*$/, '')
           .replace(/\\/g, '/');
-        
+
         absolutePath = decodeURI(absolutePath);
-        
+
         const fileUrl = 'file:///' + absolutePath;
-                
+
         result = result.replace(
-          `![[${imagePath}]]`, 
+          `![[${imagePath}]]`,
           `![${imagePath}](${fileUrl})`
         );
       }
     }
-    
+
     return result;
   }
 
@@ -92,29 +92,29 @@ export default class CopyImageTextPlugin extends Plugin {
     const replacements = await Promise.all(Array.from(content.matchAll(imageRegex)).map(
       match => this.replaceImageWithBase64(match[1], file)
     ));
-    
+
     let htmlContent = content;
     replacements.forEach(({ original, replacement }) => {
       htmlContent = htmlContent.replace(original, replacement);
     });
 
-    // 处理分割线
+    // Process horizontal rules
     htmlContent = htmlContent.replace(/^---$/gm, '<hr style="border: 0; border-top: 1px solid #ddd; margin: 20px 0;">');
 
-    // 处理代码块
+    // Process code blocks
     htmlContent = htmlContent.replace(/```([\s\S]*?)```/g, (match, code) => {
       const escapedCode = this.escapeHtml(code.trim());
       return `<pre style="background-color: #f6f8fa; border-radius: 3px; padding: 16px; overflow: auto;"><code style="font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 14px; line-height: 1.5;">${escapedCode}</code></pre>`;
     });
 
-    // 处理标题
+    // Process headings
     htmlContent = htmlContent.replace(/^(#+)\s+(.*?)$/gm, (match, hashes, title) => {
       const level = hashes.length;
       const fontSize = 28 - (level * 2);
       return `<h${level} style="font-size: ${fontSize}px; font-weight: bold; margin: 10px 0;">${title}</h${level}>`;
     });
 
-    // 其他 Markdown 到 HTML 的转换
+    // Other Markdown to HTML conversion
     htmlContent = htmlContent
       .replace(/\n/g, '<br>')
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -128,17 +128,17 @@ export default class CopyImageTextPlugin extends Plugin {
   async replaceImageWithBase64(imagePath: string, file: TFile): Promise<{ original: string, replacement: string }> {
     try {
       const fileName = imagePath.split('/').pop() || imagePath;
-      const imageFile = this.app.vault.getFiles().find(f => 
+      const imageFile = this.app.vault.getFiles().find(f =>
         f.name.toLowerCase().includes(fileName.toLowerCase())
       );
 
       if (!imageFile) {
-        return { original: `![[${imagePath}]]`, replacement: `[图片未找到: ${imagePath}]` };
+        return { original: `![[${imagePath}]]`, replacement: `[Image not found: ${imagePath}]` };
       }
 
       const stat = await this.app.vault.adapter.stat(imageFile.path);
       if (stat && stat.size > 10 * 1024 * 1024) {
-        return { original: `![[${imagePath}]]`, replacement: `[图片文件过大: ${imagePath}]` };
+        return { original: `![[${imagePath}]]`, replacement: `[Image file too large: ${imagePath}]` };
       }
 
       const imageArrayBuffer = await this.app.vault.readBinary(imageFile);
@@ -150,7 +150,7 @@ export default class CopyImageTextPlugin extends Plugin {
         replacement: `<img src="data:${mimeType};base64,${base64}" alt="${imagePath}" style="max-width: 100%;">`
       };
     } catch (error) {
-      return { original: `![[${imagePath}]]`, replacement: `[图片处理错误: ${imagePath}]` };
+      return { original: `![[${imagePath}]]`, replacement: `[Image processing error: ${imagePath}]` };
     }
   }
 
